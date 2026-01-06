@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CodeAtlas – Programming Language Explorer</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ================= THEME VARIABLES ================= */
+:root {
+  --bg: #0f172a;
+  --card: #111827;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --primary: #38bdf8;
+  --input: #020617;
+  --codebg: #020617;
+}
+
+.light {
+  --bg: #f9fafb;
+  --card: #ffffff;
+  --text: #111827;
+  --muted: #6b7280;
+  --primary: #2563eb;
+  --input: #ffffff;
+  --codebg: #f1f5f9;
+}
+
+/* ================= RESET ================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ================= BODY ================= */
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  transition: background 0.3s, color 0.3s;
+}
+
+/* ================= NAVBAR ================= */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(12px);
+}
+
+nav {
+  max-width: 1200px;
+  margin: auto;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.toggle {
+  cursor: pointer;
+  padding: 0.5rem 0.8rem;
+  background: var(--card);
+  border-radius: 8px;
+  user-select: none;
+}
+
+/* ================= HERO ================= */
+.hero {
+  max-width: 1200px;
+  margin: auto;
+  padding: 4rem 1.5rem 2rem;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 2.6rem;
+}
+
+.hero span {
+  color: var(--primary);
+}
+
+.hero p {
+  margin-top: 1rem;
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+/* ================= SEARCH ================= */
+.search-box {
+  max-width: 520px;
+  margin: 2rem auto 0;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.1);
+  background: var(--input);
+  color: var(--text);
+  font-size: 1rem;
+  outline: none;
+}
+
+.search-box input::placeholder {
+  color: var(--muted);
+}
+
+/* ================= SECTION ================= */
+.section {
+  max-width: 1200px;
+  margin: auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+/* ================= CARD ================= */
+.card {
+  background: var(--card);
+  border-radius: 18px;
+  overflow: hidden;
+  transition: transform 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+.card-header {
+  padding: 1.6rem;
+  cursor: pointer;
+}
+
+.card-header h3 {
+  color: var(--primary);
+  font-size: 1.2rem;
+}
+
+.card-header p {
+  margin-top: 0.4rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* ================= EXPAND ================= */
+.card-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+}
+
+.card.active .card-content {
+  max-height: 1000px;
+}
+
+.content-inner {
+  padding: 1.5rem;
+  border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+.content-inner img {
+  width: 100%;
+  border-radius: 14px;
+  margin-bottom: 1rem;
+}
+
+.content-inner h4 {
+  margin-top: 0.8rem;
+  margin-bottom: 0.4rem;
+}
+
+.content-inner p {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* ================= CODE ================= */
+pre {
+  background: var(--codebg);
+  padding: 1rem;
+  border-radius: 12px;
+  overflow-x: auto;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+}
+
+/* ================= FOOTER ================= */
+footer {
+  text-align: center;
+  padding: 2rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 600px) {
+  .hero h1 {
+    font-size: 2rem;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <nav>
+    <div class="logo">CodeAtlas</div>
+    <div class="toggle" onclick="toggleTheme()">🌙</div>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Explore <span>Programming Languages</span></h1>
+  <p>Click on a language to expand and learn details, usage, and sample code.</p>
+
+  <div class="search-box">
+    <input type="text" id="search" placeholder="Search programming language..." onkeyup="filterLanguages()">
+  </div>
+</section>
+
+<section class="section">
+  <div class="cards" id="languageCards"></div>
+</section>
+
+<footer>
+  © 2026 CodeAtlas • Optimized Learning Platform
+</footer>
+
+<script>
+const languages = [
+  {
+    name: "Python",
+    short: "Simple, readable & powerful",
+    image: "https://navalapp.com/snp-wp-content/uploads/2024/06/introduction_to_python_course_thumbnail.jpg",
+    description: "Python is a high-level, interpreted programming language known for its readability, versatility, and wide range of applications in web development, data analysis, artificial intelligence, and more.",
+    usage: "AI, Machine Learning, Data Science, Web Development",
+    code: `print("Hello, Python!")`
+  },
+  {
+    name: "JavaScript",
+    short: "Language of the Web",
+    image: "https://bairesdev.mo.cloudinary.net/blog/2023/08/What-Is-JavaScript-Used-For.jpg?tx=w_1920,q_auto",
+    description: "JavaScript is a high-level, interpreted (or just-in-time compiled) programming language that follows the ECMAScript standard. It is one of the core technologies of the web, alongside HTML and CSS.",
+    usage: "Frontend, Backend, Web Applications",
+    code: `console.log("Hello, JavaScript");`
+  },
+  {
+    name: "Java",
+    short: "Robust & platform-independent",
+    image: "https://miro.medium.com/0*gtY-llyEbkeoS1Sp.png",
+    description: "Java is a high-level, object-oriented programming language developed by Sun Microsystems in 1995, known for its platform independence and widespread use in various applications..",
+    usage: "Enterprise Applications, Android",
+    code: `class Hello {
+  public static void main(String[] args) {
+    System.out.println("Hello, Java");
+  }
+}`
+  },
+  {
+    name: "C / C++",
+    short: "High-performance system languages",
+    image: "https://www.ibm.com/content/adobe-cms/us/en/products/c-and-c-plus-plus-compiler-family/jcr:content/root/leadspace_container/leadspace_expanded_c/image.coreimg.jpeg/1712907337547/c-compilers.jpeg",
+    description: "C and C++ are used for operating systems, game engines, and performance-critical applications.",
+    usage: "Systems Programming, Games, OS",
+    code: `#include <stdio.h>
+int main() {
+  printf("Hello, C/C++");
+  return 0;
+}`
+  },
+  {
+    name: "C#",
+    short: "Microsoft modern language",
+    image: "https://usercontent.one/wp/www.corykoseck.com/wp-content/uploads/2018/03/csharpThumb.png?media=1702939691",
+    description: "C# (pronounced “C-sharp”) is a modern, object-oriented, and type-safe programming language developed by Microsoft as part of its .NET platform. It was first released in 2000 and is designed to be simple, powerful, and versatile, enabling developers to build a wide range of applications, including desktop software, web applications, cloud services, games, and mobile apps.",
+    usage: "Windows Apps, Unity Games",
+    code: `using System;
+class Program {
+  static void Main() {
+    Console.WriteLine("Hello, C#");
+  }
+}`
+  }
+];
+
+const container = document.getElementById("languageCards");
+
+function render(list) {
+  container.innerHTML = "";
+  list.forEach(lang => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <div class="card-header">
+        <h3>${lang.name}</h3>
+        <p>${lang.short}</p>
+      </div>
+      <div class="card-content">
+        <div class="content-inner">
+          <img src="${lang.image}" alt="${lang.name}">
+          <h4>About</h4>
+          <p>${lang.description}</p>
+          <h4>Use Cases</h4>
+          <p>${lang.usage}</p>
+          <h4>Sample Code</h4>
+          <pre>${lang.code}</pre>
+        </div>
+      </div>
+    `;
+    card.querySelector(".card-header").onclick = () => toggleCard(card);
+    container.appendChild(card);
+  });
+}
+
+function toggleCard(selected) {
+  document.querySelectorAll(".card").forEach(card => {
+    if (card !== selected) card.classList.remove("active");
+  });
+  selected.classList.toggle("active");
+}
+
+function filterLanguages() {
+  const value = search.value.toLowerCase();
+  const filtered = languages.filter(lang =>
+    lang.name.toLowerCase().includes(value)
+  );
+  render(filtered);
+}
+
+function toggleTheme() {
+  document.body.classList.toggle("light");
+}
+
+render(languages);
+</script>
+
+</body>
+</html>
